@@ -1,0 +1,240 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Lachaise Assignment
+% LaTeX Template
+% Version 1.0 (26/6/2018)
+%
+% This template originates from:
+% http://www.LaTeXTemplates.com
+%
+% Authors:
+% Marion Lachaise & François Févotte
+% Vel (vel@LaTeXTemplates.com)
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+\documentclass{article}
+
+\input{structure.tex} % Include the file specifying the document structure and custom commands
+
+%----------------------------------------------------------------------------------------
+%	ASSIGNMENT INFORMATION
+%----------------------------------------------------------------------------------------
+
+\title{Pricing Models: Assignment \#1} % Title of the assignment
+
+\author{N.Borovykh, E. van Raaij\\  \\ \texttt{Natalia.Borovykh@Rabobank.com} \\ \texttt{Erik.van.Raaij@Rabobank.com}} % Author name and email address
+
+\date{TU Delft --- \today} % University, school and/or department name(s) and a date
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+\maketitle % Print the title
+
+%----------------------------------------------------------------------------------------
+%	INTRODUCTION
+%----------------------------------------------------------------------------------------
+
+\section*{Introduction} % Unnumbered section
+
+In this document the first assignment is explained high level. It also provides some clarity on the deliverables that have to be handed in. 
+It's expected that you make the assignments in pairs of two using the \textit{TUD01 EuropeanOption.zip} provided to you.
+
+% Math equation/formula
+%\begin{equation}
+%	I = \int_{a}^{b} f(x) \; \text{d}x.
+%\end{equation}
+
+
+\begin{info} % Information block
+The zip file consist of different folders:
+\begin{itemize}
+  \item Code
+  \item Documentation
+  \item Input
+  \item Output
+  \item Solutions
+\end{itemize}	
+\end{info}
+The 'scenario' that generate the results of the assignment should be provided in the Solutions. 
+The Code folder contains several files with functions that might be re-used. 
+To have readable code these functions are not coded 'inline' but taken out. 
+It's advised to scan first the folders and files to see what is available and to get a feel for the structure.
+
+\begin{info} % Information block
+Please use Anaconda distribution 2023.07 or higher which can be downloaded from
+\begin{itemize}
+    \item https://www.anaconda.com/products/individual
+\end{itemize}
+The assignment will be checked either in Spyder or Visual Studio Code.
+\end{info}
+\begin{warn}[Deliverable 01:]
+  Please add your name and email address to the \textit{Students.csv} file in the Input folder.
+\end{warn}
+
+%----------------------------------------------------------------------------------------
+%	PROBLEM 1
+%----------------------------------------------------------------------------------------
+%\newpage
+\section{European Option} % Numbered section
+
+In the first assignment European options are priced assuming lognormal dynamics of the underlying. 
+First, the analytical distribution is compared to the one simulated with Monte Carlo. 
+Second, the price of an analytically calculated option is compared to the price of the same option calculated using Monte Carlo. 
+Last, but not least, the prices of puts and calls have to be expressed in volatilities.
+%------------------------------------------------
+
+\newpage
+\subsection{Lognormal distribution}
+\label{sec:LNDistribution}
+\begin{info} % Information block
+The details of the lognormal underlying are the following:
+    \begin{itemize}
+      \item spot price  = 443
+      \item volatility = 20\%
+      \item risk free rate = 6\%
+      \item expiry = 2 (year)
+    \end{itemize}
+\end{info}
+Simulate the values of the underlying at expiry with Monte Carlo (MC) and create an empirical distribution using the .hist function of matplotlib.pyplot package. 
+As you've to reuse the path generator this should be coded in \textit{paths.py}. 
+The lognormal PDF should be added to the \textit{distribution.py}. 
+The MC simulation should be run with 2000 (2k) and 20k paths.
+
+\begin{warn}[Deliverable 02:]
+  Create one figure with two subplots where the empirical distribution is compared to (the same) analytical distribution. 
+  Save the figure to the Output folder. 
+  In the first subplot use 2k paths. 
+  In the second subplot use 20k paths. 
+  The code to generate the figure should be put in \textit{Solution11.py}
+\end{warn}
+
+\subsection{Call option prices}
+\begin{info} % Information block
+See section \ref{sec:LNDistribution}. In addition,
+    \begin{itemize}
+      \item strike price  = 443
+      \item number of paths = [5k, 10k, 50k, 100k, 150k, 200k, 400k, 600k, 800k, 1000k]
+    \end{itemize}
+\end{info}
+
+Calculate the value of the European option analytically and several times with MC using the given number of paths. 
+Therefore add an analytical pricer and a MC pricer to \textit{payoffs.py}. 
+The code should be generic such that put prices can be calculated as well. 
+The MC pricer should return both the price and its standard error. 
+Keep track how long it takes to generate the MC paths and the MC price for each number of paths.
+
+\begin{warn}[Deliverable 03:]
+  Create one figure with two subplots. Show in the first plot the analytical price and the MC prices. 
+  In addition plot the standard error for each MC run. 
+  Show in the second subplot how long each MC run took. 
+  Save the figure to the Output folder. 
+  The data used to create the figures should be saved in CSV format to the output folder as well. 
+  The code to generate the figure and the output data should be put in \textit{Solution12.py}
+\end{warn}
+
+\newpage
+
+\subsection{Implied Volatilities}
+\begin{info} % Information block
+In the Input folder \textit{OptionPrices.csv} is stored. This file contains:
+    \begin{itemize}
+      \item out of the money (OTM) European put and call prices
+      \item spot values
+      \item strike prices
+      \item expiries
+      \item risk free rates
+      \item CPs (1 = call, -1 = put)
+    \end{itemize}
+In addition a threshold is needed, which is set to 0.0001.
+\end{info}
+
+Calculate for each option/strike its corresponding implied volatility (IV). 
+The functionality to calculate the IV should be added to \textit{bsfunctions.py}. 
+The function should also keep track of the number iterations it needs to find the IV given the above threshold.
+
+\begin{warn}[Deliverable 04:]
+  Create one figure with two subplots. Show in the first plot both the prices and the volatilities. 
+  Plot in the second subplot per option/strike the number of iterations it took to converge. 
+  Save the figure to the Output folder. 
+  The data used to create the figures should be saved in CSV format to the Output folder as well. 
+  The code to generate the figure and the output data should be put in \textit{Solution13.py}
+\end{warn}
+
+% Numbered question, with subquestions in an enumerate environment
+%\begin{question}
+%	Quisque ullamcorper placerat ipsum. Cras nibh. Morbi vel justo vitae lacus tincidunt ultrices. Lorem ipsum dolor sit amet, consectetuer adipiscing elit.
+%
+%	% Subquestions numbered with letters
+%	\begin{enumerate}[(a)]
+%		\item Do this.
+%		\item Do that.
+%		\item Do something else.
+%	\end{enumerate}
+%\end{question}
+	
+%------------------------------------------------
+
+
+%\begin{center}
+%	\begin{minipage}{0.5\linewidth} % Adjust the minipage width to accomodate for the length of algorithm lines
+%		\begin{algorithm}[H]
+%			\KwIn{$(a, b)$, two floating-point numbers}  % Algorithm inputs
+%			\KwResult{$(c, d)$, such that $a+b = c + d$} % Algorithm outputs/results
+%			\medskip
+%			\If{$\vert b\vert > \vert a\vert$}{
+%				exchange $a$ and $b$ \;
+%			}
+%			$c \leftarrow a + b$ \;
+%			$z \leftarrow c - a$ \;
+%			$d \leftarrow b - z$ \;
+%			{\bf return} $(c,d)$ \;
+%			\caption{\texttt{FastTwoSum}} % Algorithm name
+%			\label{alg:fastTwoSum}   % optional label to refer to
+%		\end{algorithm}
+%	\end{minipage}
+%\end{center}
+
+
+% Numbered question, with an optional title
+%\begin{question}[\itshape (with optional title)
+%Proin hendrerit sem nec tempor sollicitudin.
+%\end{question}
+
+
+%----------------------------------------------------------------------------------------
+%	PROBLEM 2
+%----------------------------------------------------------------------------------------
+
+
+% File contents
+%\begin{file}[hello.py]
+%\begin{lstlisting}[language=Python]
+%#! /usr/bin/python
+%
+%import sys
+%sys.stdout.write("Hello World!\n")
+%\end{lstlisting}
+%\end{file}
+
+% Command-line "screenshot"
+
+%\begin{commandline}
+%	\begin{verbatim}
+%		$ chmod +x hello.py
+%		$ ./hello.py
+%
+%		Hello World!
+%	\end{verbatim}
+%\end{commandline}
+
+
+
+\end{document}
