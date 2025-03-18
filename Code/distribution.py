@@ -1,5 +1,7 @@
 import numpy as np
 
+### HELLO!!!! #####
+
 #Lognormal PDF original
 def lognorm_pdf(x, mu = 0, vol = 1): 
     """
